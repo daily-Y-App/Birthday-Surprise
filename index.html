@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Birthday Party ! 🎂</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pyidaungsu:wght@700&display=swap');
+        body { background: #000; overflow: hidden; font-family: 'Pyidaungsu', sans-serif; }
+        .neon-text { text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de; color: white; }
+        #main-content { display: none; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
+        .visualizer-bar { transition: height 0.1s ease; }
+    </style>
+</head>
+<body class="h-screen flex items-center justify-center">
+
+    <div id="opener" class="text-center">
+        <div id="gift-box" onclick="startParty()" class="text-[150px] cursor-pointer animate__animated animate__tada animate__infinite">
+            🎁
+        </div>
+        <p class="text-white text-xl mt-6 animate__pulse animate__infinite animate__animated">တစ်ချက်နှိပ်ပြီး ပါတီစလိုက်ရအောင်!</p>
+    </div>
+
+    <div id="main-content" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-4">
+        
+        <div id="visualizer" class="absolute top-10 flex items-end gap-1 h-20">
+            </div>
+
+        <div class="animate__animated animate__bounceIn">
+            <h1 class="text-6xl md:text-8xl neon-text font-bold mb-6" style="font-family: 'Dancing Script', cursive;">
+                Happy Birthday Pwint Phyu Soe!
+            </h1>
+        </div>
+
+        <div class="relative w-64 h-64 md:w-80 md:h-80 mb-8 animate__animated animate__zoomIn animate__delay-1s">
+            <div class="absolute inset-0 bg-pink-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGlmZ3R6NHJmZzR6NHJmZzR6NHJmZzR6NHJmZzR6NHJmZzR6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKSjPqcKFsWNoTS/giphy.gif" 
+                 class="w-full h-full object-cover rounded-full border-4 border-white shadow-2xl relative z-10">
+        </div>
+
+        <div class="max-w-xl bg-black/50 p-6 rounded-2xl border border-pink-500/30 backdrop-blur-md animate__animated animate__fadeInUp animate__delay-2s">
+            <p class="text-white text-xl md:text-2xl leading-relaxed">
+                "မွေးနေ့မှာ ပျော်ရွှင်ပါစေ သူငယ်ချင်းကြီး! <br>
+                မင်းလို သူငယ်ချင်းမျိုး ရထားတာ ငါ့အတွက်တော့ ကံကောင်းခြင်းတစ်ခုပဲ။ <br>
+                ဒီ Dj သီချင်းလေးအတိုင်း အမြဲတမ်း ပျော်ပျော်ရွှင်ရွှင် ကြနိုင်ပါစေ!"
+            </p>
+        </div>
+    </div>
+
+    <audio id="bday-dj">
+        <source src="Happy_Birthday_Song__Funky_Night__Dj_Than_Tun_Aung_မွေးနေ့Djလေး_🎂✔(256k).mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        function startParty() {
+            const song = document.getElementById('bday-dj');
+            song.play().catch(e => alert("Audio file မတွေ့ပါ သို့မဟုတ် Browser မှ ပိတ်ထားပါသည်"));
+
+            // Confetti Explosion
+            confetti({
+                particleCount: 300,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#ff00de', '#00d4ff', '#ffd700']
+            });
+
+            // UI Transition
+            document.getElementById('opener').classList.add('animate__animated', 'animate__zoomOut');
+            setTimeout(() => {
+                document.getElementById('opener').style.display = 'none';
+                document.getElementById('main-content').style.display = 'flex';
+                createVisualizer();
+            }, 500);
+
+            // Continuous Confetti for the DJ vibe
+            setInterval(() => {
+                confetti({
+                    particleCount: 50,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 }
+                });
+                confetti({
+                    particleCount: 50,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 }
+                });
+            }, 3000);
+        }
+
+        function createVisualizer() {
+            const container = document.getElementById('visualizer');
+            for (let i = 0; i < 30; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'visualizer-bar w-2 bg-pink-500 rounded-full';
+                bar.style.height = '10px';
+                container.appendChild(bar);
+                
+                // Random movement to simulate music bounce
+                setInterval(() => {
+                    const height = Math.random() * 60 + 10;
+                    bar.style.height = height + 'px';
+                    bar.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                }, 150);
+            }
+        }
+    </script>
+</body>
+</html>
