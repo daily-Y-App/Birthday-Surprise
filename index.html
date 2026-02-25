@@ -3,110 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Birthday Party ! 🎂</title>
+    <title>Happy Birthday Pwint Phyu Soe | Party Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pyidaungsu:wght@700&display=swap');
-        body { background: #000; overflow: hidden; font-family: 'Pyidaungsu', sans-serif; }
-        .neon-text { text-shadow: 0 0 10px #ff00de, 0 0 20px #ff00de, 0 0 40px #ff00de; color: white; }
-        #main-content { display: none; background: radial-gradient(circle, #1a1a1a 0%, #000 100%); }
-        .visualizer-bar { transition: height 0.1s ease; }
+        
+        body { 
+            /* လင်းလက်ပြီး လှပတဲ့ ပန်းရောင်/Rose Gold ပါတီ နောက်ခံ */
+            background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%); 
+            color: white;
+            font-family: 'Pyidaungsu', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .premium-text {
+            text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+            color: #ffffff;
+        }
+
+        .gold-glow {
+            color: #ffe066;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        .cake-wrapper { cursor: pointer; transition: 0.5s; }
+        .cake-wrapper:hover { transform: scale(1.1); }
+        .cake-emoji { font-size: 110px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); }
+
+        .photo-grid { display: flex; gap: 15px; perspective: 1000px; z-index: 50; }
+        .tile {
+            width: clamp(90px, 25vw, 160px);
+            aspect-ratio: 3/4;
+            background: white;
+            border-radius: 12px;
+            padding: 8px 8px 25px 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            position: relative;
+        }
+        .tile img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; }
+        
+        /* 5D Click Effect */
+        .tile.active {
+            transform: scale(2.2) translateZ(120px) !important;
+            z-index: 1000 !important;
+            box-shadow: 0 0 60px rgba(255, 255, 255, 0.9);
+            border: 3px solid #fff;
+        }
+
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            width: 45px; height: 45px;
+            display: none; align-items: center; justify-content: center;
+            border: 2px solid white;
+            cursor: pointer; font-size: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .wish-box {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 30px;
+            padding: 20px 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .decor { position: absolute; pointer-events: none; z-index: 10; }
+
+        /* Animated Gift Boxes positioned around the screen */
+        .gift-box-left { position: absolute; bottom: 15%; left: 5%; font-size: 60px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2)); z-index: 20;}
+        .gift-box-right { position: absolute; bottom: 25%; right: 5%; font-size: 70px; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2)); z-index: 20;}
+
+        #main-stage { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; justify-content: space-around; position: relative; }
     </style>
 </head>
-<body class="h-screen flex items-center justify-center">
+<body>
 
-    <div id="opener" class="text-center">
-        <div id="gift-box" onclick="startParty()" class="text-[150px] cursor-pointer animate__animated animate__tada animate__infinite">
-            🎁
+    <button id="music-toggle" class="music-btn" onclick="toggleMusic()">🎵</button>
+
+    <div id="opener" class="text-center animate__animated animate__zoomIn">
+        <div class="cake-wrapper animate__animated animate__heartBeat animate__infinite" onclick="launchSurprise()">
+            <div class="cake-emoji">🎂</div>
         </div>
-        <p class="text-white text-xl mt-6 animate__pulse animate__infinite animate__animated">တစ်ချက်နှိပ်ပြီး ပါတီစလိုက်ရအောင်!</p>
+        <h2 class="premium-text text-4xl font-bold mt-8">HAPPY BIRTHDAY</h2>
+        <p class="text-white mt-4 tracking-[4px] text-sm uppercase bg-black/20 px-4 py-1 rounded-full inline-block">ကိတ်မုန့်လေးကို နှိပ်ပါ</p>
     </div>
 
-    <div id="main-content" class="absolute inset-0 w-full h-full flex flex-col items-center justify-center text-center p-4">
+    <div id="main-stage" class="p-4">
         
-        <div id="visualizer" class="absolute top-10 flex items-end gap-1 h-20">
+        <div class="gift-box-left animate__animated animate__bounce animate__infinite animate__slower">🎁</div>
+        <div class="gift-box-right animate__animated animate__pulse animate__infinite animate__slow">🛍️</div>
+
+        <header class="text-center animate__animated animate__fadeInDown z-50">
+            <h1 class="text-6xl md:text-8xl premium-text font-bold" style="font-family: 'Dancing Script', cursive;">Pwint Phyu Soe</h1>
+            <p class="gold-glow tracking-[6px] text-xs font-bold uppercase mt-2">DJ Birthday Party! 🎉</p> 
+        </header>
+
+        <div class="photo-grid animate__animated animate__zoomIn animate__delay-1s">
+            <div class="tile transform -rotate-6" onclick="focusTile(this)">
+                <img src="happy.png" alt="Happy Moment">
             </div>
-
-        <div class="animate__animated animate__bounceIn">
-            <h1 class="text-6xl md:text-8xl neon-text font-bold mb-6" style="font-family: 'Dancing Script', cursive;">
-                Happy Birthday Pwint Phyu Soe!
-            </h1>
+            <div class="tile transform scale-110 -translate-y-4" onclick="focusTile(this)">
+                <img src="koko.png" alt="Ko Ko">
+            </div>
+            <div class="tile transform rotate-6" onclick="focusTile(this)">
+                <img src="mama.png" alt="Ma Ma">
+            </div>
         </div>
 
-        <div class="relative w-64 h-64 md:w-80 md:h-80 mb-8 animate__animated animate__zoomIn animate__delay-1s">
-            <div class="absolute inset-0 bg-pink-500 rounded-full blur-2xl opacity-30 animate-pulse"></div>
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExMGlmZ3R6NHJmZzR6NHJmZzR6NHJmZzR6NHJmZzR6NHJmZzR6JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1n/3o7TKSjPqcKFsWNoTS/giphy.gif" 
-                 class="w-full h-full object-cover rounded-full border-4 border-white shadow-2xl relative z-10">
-        </div>
-
-        <div class="max-w-xl bg-black/50 p-6 rounded-2xl border border-pink-500/30 backdrop-blur-md animate__animated animate__fadeInUp animate__delay-2s">
-            <p class="text-white text-xl md:text-2xl leading-relaxed">
-                "မွေးနေ့မှာ ပျော်ရွှင်ပါစေ သူငယ်ချင်းကြီး! <br>
-                မင်းလို သူငယ်ချင်းမျိုး ရထားတာ ငါ့အတွက်တော့ ကံကောင်းခြင်းတစ်ခုပဲ။ <br>
-                ဒီ Dj သီချင်းလေးအတိုင်း အမြဲတမ်း ပျော်ပျော်ရွှင်ရွှင် ကြနိုင်ပါစေ!"
+        <div class="wish-box max-w-xl w-full animate__animated animate__fadeInUp animate__delay-2s mx-4 z-50">
+            <p class="text-white text-base md:text-lg leading-relaxed italic text-center font-bold">
+                "မွေးနေ့မှာ ပျော်ရွှင်ပါစေ ပွင့်ဖြူစိုးရေ! <br> ၂၅ နှစ်ပြည့်မှစပြီး အရုပ်ကလေးတွေလို အမြဲချစ်စရာကောင်းပြီး <br> လိုရာဆန္ဒတွေအားလုံး ပြည့်ဝပါစေ။ 🎁"
             </p>
         </div>
+
+        <footer class="text-center animate__animated animate__fadeIn animate__delay-3s z-50">
+            <a href="https://daily-y-app.github.io/Web-AppServices/" target="_blank" 
+               class="bg-white text-pink-500 px-12 py-3 rounded-full font-extrabold tracking-widest uppercase text-xs inline-block shadow-xl hover:scale-105 transition hover:bg-pink-100">
+                ဆက်သွယ်ရန်
+            </a>
+            <p class="text-white/80 text-[9px] mt-4 tracking-[4px] uppercase font-bold">Designed by Web & App Services</p>
+        </footer>
     </div>
 
-    <audio id="bday-dj">
-        <source src="Happy_Birthday_Song__Funky_Night__Dj_Than_Tun_Aung_မွေးနေ့Djလေး_🎂✔(256k).mp3" type="audio/mpeg">
+    <audio id="bgm" loop>
+        <source src="bday-song.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        function startParty() {
-            const song = document.getElementById('bday-dj');
-            song.play().catch(e => alert("Audio file မတွေ့ပါ သို့မဟုတ် Browser မှ ပိတ်ထားပါသည်"));
+        const music = document.getElementById('bgm');
+        const musicBtn = document.getElementById('music-toggle');
 
-            // Confetti Explosion
+        function launchSurprise() {
+            music.play().catch(err => console.log("Audio play requires interaction.")); 
+            musicBtn.style.display = 'flex';
+
+            // ဖဲကြိုးလေးများ လွင့်စင်ခြင်း
             confetti({
-                particleCount: 300,
-                spread: 100,
+                particleCount: 250,
+                spread: 120,
                 origin: { y: 0.6 },
-                colors: ['#ff00de', '#00d4ff', '#ffd700']
+                colors: ['#ffffff', '#ffe066', '#ff477e', '#ff0a54']
             });
 
-            // UI Transition
-            document.getElementById('opener').classList.add('animate__animated', 'animate__zoomOut');
+            document.getElementById('opener').classList.add('animate__animated', 'animate__fadeOut');
             setTimeout(() => {
                 document.getElementById('opener').style.display = 'none';
-                document.getElementById('main-content').style.display = 'flex';
-                createVisualizer();
-            }, 500);
-
-            // Continuous Confetti for the DJ vibe
-            setInterval(() => {
-                confetti({
-                    particleCount: 50,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 }
-                });
-                confetti({
-                    particleCount: 50,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 }
-                });
-            }, 3000);
+                document.getElementById('main-stage').style.display = 'flex';
+                spawnDecorations();
+            }, 600);
         }
 
-        function createVisualizer() {
-            const container = document.getElementById('visualizer');
-            for (let i = 0; i < 30; i++) {
-                const bar = document.createElement('div');
-                bar.className = 'visualizer-bar w-2 bg-pink-500 rounded-full';
-                bar.style.height = '10px';
-                container.appendChild(bar);
-                
-                // Random movement to simulate music bounce
-                setInterval(() => {
-                    const height = Math.random() * 60 + 10;
-                    bar.style.height = height + 'px';
-                    bar.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
-                }, 150);
+        function toggleMusic() {
+            if (music.paused) { 
+                music.play(); 
+                musicBtn.innerText = '🎵'; 
+            } else { 
+                music.pause(); 
+                musicBtn.innerText = '🔇'; 
             }
+        }
+
+        // ဓာတ်ပုံကို နှိပ်လျှင် 5D အနေဖြင့် ရှေ့ထွက်လာစေရန်
+        function focusTile(el) {
+            const tiles = document.querySelectorAll('.tile');
+            if (el.classList.contains('active')) {
+                el.classList.remove('active');
+            } else {
+                tiles.forEach(t => t.classList.remove('active'));
+                el.classList.add('active');
+                // နှိပ်လိုက်တိုင်း ဖဲကြိုးလေးတွေ ထွက်လာမည်
+                confetti({ particleCount: 40, spread: 60, origin: { x: 0.5, y: 0.5 }, colors: ['#ffffff', '#ffe066'] });
+            }
+        }
+
+        // လေထဲလွင့်နေသော လက်ဆောင်ပုံးများနှင့် အရုပ်လေးများ
+        function spawnDecorations() {
+            const icons = ['🎁', '🛍️', '🎀', '🎈', '✨'];
+            setInterval(() => {
+                const d = document.createElement('div');
+                d.className = 'decor animate__animated animate__fadeOutUp';
+                d.innerText = icons[Math.floor(Math.random() * icons.length)];
+                d.style.left = Math.random() * 100 + 'vw';
+                d.style.top = '105vh';
+                d.style.fontSize = Math.random() * 25 + 20 + 'px';
+                document.body.appendChild(d);
+                const dur = Math.random() * 4000 + 4000;
+                d.animate([{ transform: 'translateY(0)' }, { transform: `translateY(-120vh) rotate(${Math.random() * 360}deg)` }], { duration: dur });
+                setTimeout(() => d.remove(), dur);
+            }, 500);
         }
     </script>
 </body>
